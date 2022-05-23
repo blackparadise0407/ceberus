@@ -1,0 +1,25 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  create(newUserData: NewUserInput!): User!
+}
+
+input NewUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+type Query {
+  User: [User!]!
+}
+
+type User {
+  email: String!
+  enabled: Boolean!
+  id: String!
+  username: String!
+  verified: Boolean!
+}
