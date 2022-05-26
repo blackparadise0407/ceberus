@@ -2,8 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input LoginInput {
+  password: String!
+  username: String!
+}
+
+type LoginOutput {
+  accessToken: String!
+  user: User!
+}
+
 type Mutation {
   create(newUserData: NewUserInput!): User!
+  login(loginInput: LoginInput!): LoginOutput!
+  register(registerInput: RegisterInput!): String!
 }
 
 input NewUserInput {
@@ -13,7 +25,15 @@ input NewUserInput {
 }
 
 type Query {
-  User: [User!]!
+  currentUser: User!
+  user: [User!]!
+}
+
+input RegisterInput {
+  confirmPassword: String!
+  email: String!
+  password: String!
+  username: String!
 }
 
 type User {

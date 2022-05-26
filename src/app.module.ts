@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HttpLoggerMiddleware } from './common/middlewares/http-logger.middleware';
 import { UserModule } from './users/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,8 +28,9 @@ import { UserModule } from './users/user.module';
         username: config.get<string>('db.username'),
         password: config.get<string>('db.password'),
         database: config.get<string>('db.name'),
-        entities: ['dist/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        entities: [join(__dirname, '**/*.entity{.ts,.js}')],
+        synchronize: false,
+        useUTC: true,
       }),
       inject: [ConfigService],
     }),
@@ -44,6 +46,7 @@ import { UserModule } from './users/user.module';
       },
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
