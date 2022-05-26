@@ -9,9 +9,10 @@ export class NewUserInput {
 
   @Field()
   @IsEmail()
+  @MaxLength(255)
   email: string;
 
   @Field()
-  @MaxLength(255)
+  @MaxLength(128)
   password: string;
 }

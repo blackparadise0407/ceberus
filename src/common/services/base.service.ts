@@ -14,8 +14,8 @@ export class BaseService<
   Entity extends BaseEntity,
   Repo extends Repository<Entity>,
 > {
-  protected readonly logger: Logger;
-  protected readonly repository: Repo;
+  private readonly logger: Logger;
+  private readonly repository: Repo;
   constructor(repository: Repo) {
     this.repository = repository;
     this.logger = new Logger();
@@ -43,7 +43,7 @@ export class BaseService<
     }
   }
 
-  public findOne(id: EntityId, opt: FindOneOptions<Entity> = {}) {
+  public findOne(id?: EntityId, opt: FindOneOptions<Entity> = {}) {
     try {
       return this.repository.findOne(id, opt);
     } catch (e) {

@@ -8,7 +8,7 @@ import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService extends BaseService<User, UserRepository> {
-  constructor(@InjectRepository(User) userRepo: UserRepository) {
+  constructor(private readonly userRepo: UserRepository) {
     super(userRepo);
   }
 }
