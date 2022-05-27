@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { UserModule } from '@/users/user.module';
+import { UserModule } from '@/user/user.module';
 
 import { Algorithm } from './../../node_modules/@types/jsonwebtoken/index.d';
 import { AuthResolver } from './auth.resolver';

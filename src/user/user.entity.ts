@@ -5,11 +5,14 @@ import {
   Column,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Tweet } from '@/tweet/tweet.entity';
+
 @ObjectType()
-@Entity('users')
+@Entity('user')
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
@@ -36,4 +39,8 @@ export class User extends BaseEntity {
   @Column({ default: true })
   @Field(() => Boolean)
   enabled: boolean;
+
+  @OneToMany(() => Tweet, (tweet) => tweet.id)
+  @Field(() => [Tweet])
+  tweets: Tweet[];
 }

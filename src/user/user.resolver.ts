@@ -20,8 +20,10 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  public create(@Args('newUserData') newUserData: NewUserInput): Promise<User> {
-    const createdUser = plainToClass(User, newUserData);
+  public createUser(
+    @Args('newUserInput') newUserInput: NewUserInput,
+  ): Promise<User> {
+    const createdUser = plainToClass(User, newUserInput);
     return this.userService.create(createdUser);
   }
 
