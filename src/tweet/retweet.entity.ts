@@ -33,7 +33,7 @@ export class ReTweet extends BaseEntity {
   user_id: string;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   @Field(() => User)
   user: User;
 
@@ -41,6 +41,7 @@ export class ReTweet extends BaseEntity {
   tweet_id: number;
 
   @ManyToOne(() => Tweet, (tweet) => tweet.id)
+  @JoinColumn({ name: 'tweet_id' })
   @Field(() => Tweet)
   tweet: Tweet;
 }

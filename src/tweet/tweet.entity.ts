@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -32,6 +33,7 @@ export class Tweet extends BaseEntity {
   user_id: string;
 
   @ManyToOne(() => User, (user) => user.tweets)
+  @JoinColumn({ name: 'user_id' })
   @Field(() => User)
   user: User;
 

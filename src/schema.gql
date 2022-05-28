@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Attachment {
+  encoding: String!
+  id: String!
+  mimetype: String!
+  path: String!
+  user: User!
+}
+
 type CountTweetedTagOutput {
   count: Int!
   id: Int!
@@ -26,6 +34,11 @@ type Cursor {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input FileUploadInput {
+  file: Upload!
+  userId: String!
+}
 
 input GetTweetInput {
   afterCursor: String
@@ -54,12 +67,19 @@ type Mutation {
   createUser(newUserInput: NewUserInput!): User!
   login(loginInput: LoginInput!): LoginOutput!
   register(registerInput: RegisterInput!): String!
+  uploadFile(fileUploadInput: FileUploadInput!): Attachment!
 }
 
 input NewUserInput {
   email: String!
   password: String!
   username: String!
+}
+
+type Profile {
+  description: String!
+  fullName: String!
+  id: Int!
 }
 
 type Query {
@@ -103,10 +123,14 @@ type Tweet {
   user_id: String!
 }
 
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
 type User {
   email: String!
   enabled: Boolean!
   id: String!
+  profile: Profile!
   tweets: [Tweet!]!
   username: String!
   verified: Boolean!

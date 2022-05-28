@@ -14,6 +14,7 @@ import { HttpLoggerMiddleware } from './common/middlewares/http-logger.middlewar
 import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
 import { TweetModule } from './tweet/tweet.module';
+import { AttachmentModule } from './attachment/attachment.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { TweetModule } from './tweet/tweet.module';
     AuthModule,
     TagModule,
     TweetModule,
+    AttachmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

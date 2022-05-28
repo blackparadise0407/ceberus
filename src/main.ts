@@ -5,6 +5,9 @@ import { isEmpty } from 'lodash';
 
 import { AppModule } from './app.module';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const graphqlUploadExpress = require('graphql-upload/graphqlUploadExpress.js');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('App');
@@ -35,6 +38,9 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     origin: corsOrigins,
   });
+
+  // This middleware should be added before calling `applyMiddleware`.
+  app.use(graphqlUploadExpress());
 
   // Validation pipe
   app.useGlobalPipes(new ValidationPipe({ transform: true }));

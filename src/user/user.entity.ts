@@ -5,11 +5,16 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { Attachment } from '@/attachment/attachment.entity';
 import { Tweet } from '@/tweet/tweet.entity';
+
+import { Profile } from './profile/profile.entity';
 
 @ObjectType()
 @Entity('user')
@@ -43,4 +48,12 @@ export class User extends BaseEntity {
   @OneToMany(() => Tweet, (tweet) => tweet.id)
   @Field(() => [Tweet])
   tweets: Tweet[];
+
+  @OneToOne(() => Profile)
+  @JoinColumn({ name: 'profile_id' })
+  @Field(() => Profile)
+  profile: Profile;
+
+  @OneToMany(() => Attachment, (attachment) => attachment.user)
+  attachments: Attachment[];
 }
