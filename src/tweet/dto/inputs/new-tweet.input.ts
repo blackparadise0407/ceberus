@@ -7,4 +7,10 @@ export class CreateTweetInput {
 
   @Field()
   userId: string;
+
+  @Field({ nullable: true })
+  photoId: string;
+
+  @Field(() => [String])
+  tags: string[];
 }

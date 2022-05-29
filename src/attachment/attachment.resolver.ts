@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { createWriteStream } from 'fs';
+import { createWriteStream, unlink } from 'fs';
 
-import { BadGatewayException, UseGuards } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Logger,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
@@ -14,11 +19,13 @@ import { FileUploadInput } from './dto/inputs/file-upload.input';
 @UseGuards(GqlAuthGuard)
 @Resolver((of) => Attachment)
 export class AttachmentResolver {
+  private readonly logger: Logger;
   constructor(
     private readonly attachmentService: AttachmentService,
-
     private readonly userService: UserService,
-  ) {}
+  ) {
+    this.logger = new Logger('AttachmentResolver');
+  }
 
   @Mutation(() => Attachment)
   async uploadFile(
@@ -48,5 +55,19 @@ export class AttachmentResolver {
         );
       },
     );
+  }
+
+  @Mutation(() => Boolean)
+  public async deleteFile(@Args('attachmentId') attachmentId: string) {
+    const attachment = await this.attachmentService.findOne(attachmentId);
+    if (!attachment) {
+      throw new NotFoundException('Attachment not found');
+    }
+    unlink(attachment.path, (err) => {
+      if (err) {
+      }
+      this.logger.log(`${attachment.path} was deleted`);
+    });
+    return this.attachmentService.delete(attachmentId);
   }
 }

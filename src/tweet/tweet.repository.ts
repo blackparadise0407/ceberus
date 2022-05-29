@@ -8,10 +8,10 @@ import { Tweet } from './tweet.entity';
 @EntityRepository(Tweet)
 export class TweetRepository extends Repository<Tweet> {
   public async findWithPagination(input: GetTweetInput) {
-    const queryBuilder = this.createQueryBuilder('tweet').innerJoinAndSelect(
-      'tweet.user',
-      'user',
-    );
+    const queryBuilder = this.createQueryBuilder('tweet')
+      .leftJoinAndSelect('tweet.photo', 'attachment')
+      .leftJoinAndSelect('tweet.tags', 'tag')
+      .innerJoinAndSelect('tweet.user', 'user');
 
     const paginator = buildPaginator({
       entity: Tweet,

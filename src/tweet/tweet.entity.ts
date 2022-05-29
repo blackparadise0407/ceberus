@@ -9,10 +9,12 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Attachment } from '@/attachment/attachment.entity';
 import { Tag } from '@/tag/tag.entity';
 import { User } from '@/user/user.entity';
 
@@ -48,6 +50,11 @@ export class Tweet extends BaseEntity {
   @OneToMany(() => ReTweet, (retweet) => retweet.tweet)
   @Field(() => [ReTweet])
   retweets: ReTweet[];
+
+  @OneToOne(() => Attachment)
+  @JoinColumn({ name: 'photo_id' })
+  @Field(() => Attachment, { nullable: true })
+  photo: Attachment;
 
   @ManyToMany(() => Tag)
   @JoinTable()

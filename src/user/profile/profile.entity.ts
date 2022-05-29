@@ -25,7 +25,7 @@ export class Profile extends BaseEntity {
   @Field(() => String)
   description: string;
 
-  @OneToOne(() => Attachment, (attachment) => attachment.id)
+  @OneToOne(() => Attachment)
   @JoinColumn({ name: 'cover_photo_id' })
   coverPhoto: Attachment;
 }

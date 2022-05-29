@@ -21,6 +21,8 @@ input CreateTagInput {
 }
 
 input CreateTweetInput {
+  photoId: String
+  tags: [String!]!
   text: String!
   userId: String!
 }
@@ -65,6 +67,7 @@ type Mutation {
   createTag(createTagInput: CreateTagInput!): Tag!
   createTweet(createTweetInput: CreateTweetInput!): Tweet!
   createUser(newUserInput: NewUserInput!): User!
+  deleteFile(attachmentId: String!): Boolean!
   login(loginInput: LoginInput!): LoginOutput!
   register(registerInput: RegisterInput!): String!
   uploadFile(fileUploadInput: FileUploadInput!): Attachment!
@@ -86,6 +89,7 @@ type Query {
   currentUser: User!
   getTopTweetedTagCount: [CountTweetedTagOutput!]!
   getTweet(getTweetInput: GetTweetInput!): GetTweetOutput!
+  getUser(username: String!): User!
   tags: [Tag!]!
   user: [User!]!
 }
@@ -115,6 +119,7 @@ type Tag {
 type Tweet {
   createdAt: DateTime!
   id: Int!
+  photo: Attachment
   retweets: [ReTweet!]!
   tags: [Tag!]!
   text: String!

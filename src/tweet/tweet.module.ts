@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AttachmentModule } from '@/attachment/attachment.module';
 import { TagModule } from '@/tag/tag.module';
 import { UserModule } from '@/user/user.module';
 
@@ -15,6 +16,7 @@ import { TweetService } from './tweet.service';
     TypeOrmModule.forFeature([Tweet, ReTweet, TweetRepository]),
     UserModule,
     TagModule,
+    AttachmentModule,
   ],
   providers: [TweetResolver, TweetService],
 })

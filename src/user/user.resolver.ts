@@ -35,4 +35,17 @@ export class UserResolver {
     }
     return currentUser;
   }
+
+  @Query(() => User)
+  public async getUser(@Args('username') username: string): Promise<User> {
+    const user = await this.userService.findOne(undefined, {
+      where: { username },
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `User with username of ${username} not found`,
+      );
+    }
+    return user;
+  }
 }
