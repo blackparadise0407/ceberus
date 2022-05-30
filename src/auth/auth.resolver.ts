@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
+import { Profile } from '@/user/profile/profile.entity';
 import { User } from '@/user/user.entity';
 import { UserService } from '@/user/user.service';
 
@@ -56,11 +57,13 @@ export class AuthResolver {
       throw new BadRequestException('Passwords do not match');
     }
     const hashedPassword = await this.authService.stringHash(password);
-
+    const profile = new Profile();
+    await profile.save();
     const createdUser = new User();
     createdUser.email = email;
     createdUser.password = hashedPassword;
     createdUser.username = username;
+    createdUser.profile = profile;
     await this.userService.save(createdUser);
     return 'Register success';
   }

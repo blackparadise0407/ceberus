@@ -8,6 +8,7 @@ type Attachment {
   mimetype: String!
   path: String!
   user: User!
+  userId: String!
 }
 
 type CountTweetedTagOutput {
@@ -70,6 +71,7 @@ type Mutation {
   deleteFile(attachmentId: String!): Boolean!
   login(loginInput: LoginInput!): LoginOutput!
   register(registerInput: RegisterInput!): String!
+  updateCurrentUserProfile(updateCurrentUserProfileInput: UpdateCurrentUserProfileInput!): User!
   uploadFile(fileUploadInput: FileUploadInput!): Attachment!
 }
 
@@ -80,6 +82,8 @@ input NewUserInput {
 }
 
 type Profile {
+  coverPhoto: Attachment
+  coverPhotoId: String
   description: String!
   fullName: String!
   id: Int!
@@ -120,6 +124,7 @@ type Tweet {
   createdAt: DateTime!
   id: Int!
   photo: Attachment
+  photoId: String
   retweets: [ReTweet!]!
   tags: [Tag!]!
   text: String!
@@ -128,14 +133,22 @@ type Tweet {
   user_id: String!
 }
 
+input UpdateCurrentUserProfileInput {
+  coverPhotoId: String
+  description: String
+  fullName: String
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 type User {
+  attachments: [Attachment!]!
   email: String!
   enabled: Boolean!
   id: String!
   profile: Profile!
+  profileId: Int!
   tweets: [Tweet!]!
   username: String!
   verified: Boolean!

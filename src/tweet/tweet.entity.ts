@@ -32,6 +32,7 @@ export class Tweet extends BaseEntity {
   text: string;
 
   @Field(() => String)
+  @Column()
   user_id: string;
 
   @ManyToOne(() => User, (user) => user.tweets)
@@ -50,6 +51,10 @@ export class Tweet extends BaseEntity {
   @OneToMany(() => ReTweet, (retweet) => retweet.tweet)
   @Field(() => [ReTweet])
   retweets: ReTweet[];
+
+  @Column({ name: 'photo_id', nullable: true })
+  @Field(() => String, { nullable: true })
+  photoId: string;
 
   @OneToOne(() => Attachment)
   @JoinColumn({ name: 'photo_id' })

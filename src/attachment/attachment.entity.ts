@@ -29,6 +29,10 @@ export class Attachment extends BaseEntity {
   @Field(() => String)
   encoding: string;
 
+  @Column({ name: 'user_id' })
+  @Field(() => String)
+  userId: string;
+
   @ManyToOne(() => User, (user) => user.attachments)
   @JoinColumn({ name: 'user_id' })
   @Field(() => User)

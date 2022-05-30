@@ -9,12 +9,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './app.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AttachmentModule } from './attachment/attachment.module';
 import { AuthModule } from './auth/auth.module';
 import { HttpLoggerMiddleware } from './common/middlewares/http-logger.middleware';
 import { TagModule } from './tag/tag.module';
-import { UserModule } from './user/user.module';
 import { TweetModule } from './tweet/tweet.module';
-import { AttachmentModule } from './attachment/attachment.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [

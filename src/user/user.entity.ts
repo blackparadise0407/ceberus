@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import {
   BaseEntity,
@@ -49,11 +49,16 @@ export class User extends BaseEntity {
   @Field(() => [Tweet])
   tweets: Tweet[];
 
+  @Column({ name: 'profile_id' })
+  @Field(() => Int)
+  profileId: number;
+
   @OneToOne(() => Profile)
   @JoinColumn({ name: 'profile_id' })
   @Field(() => Profile)
   profile: Profile;
 
   @OneToMany(() => Attachment, (attachment) => attachment.user)
+  @Field(() => [Attachment])
   attachments: Attachment[];
 }

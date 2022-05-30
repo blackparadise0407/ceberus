@@ -1,5 +1,7 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AttachmentModule } from '@/attachment/attachment.module';
 
 import { Profile } from './profile/profile.entity';
 import { ProfileRepository } from './profile/profile.repository';
@@ -17,6 +19,7 @@ import { UserService } from './user.service';
       Profile,
       ProfileRepository,
     ]),
+    forwardRef(() => AttachmentModule),
   ],
   providers: [UserResolver, UserService, ProfileService],
   exports: [UserService],

@@ -8,6 +8,7 @@ import {
   Param,
   Res,
 } from '@nestjs/common';
+import { isUUID } from 'class-validator';
 import { Response } from 'express';
 
 import { AttachmentService } from './attachment.service';
@@ -20,11 +21,15 @@ export class AttachmentController {
     @Param('attachmentId') attachmentId: string,
     @Res() res: Response,
   ) {
-    const attachment = await this.attachmentService.findOne(attachmentId);
-
     if (!attachmentId) {
       throw new BadRequestException('Attachment ID is required');
     }
+
+    if (!isUUID(attachmentId)) {
+      throw new BadRequestException('Invalid attachment ID');
+    }
+
+    const attachment = await this.attachmentService.findOne(attachmentId);
 
     if (!attachment) {
       throw new NotFoundException(
