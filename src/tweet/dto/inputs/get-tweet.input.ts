@@ -1,8 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Cursor } from 'typeorm-cursor-pagination';
 
 @InputType()
-export class GetTweetInput implements Cursor {
+export class GetTweetInput implements BaseQuery {
   @Field({ nullable: true })
   afterCursor: string | null;
 

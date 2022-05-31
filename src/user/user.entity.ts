@@ -49,6 +49,15 @@ export class User extends BaseEntity {
   @Field(() => [Tweet])
   tweets: Tweet[];
 
+  @Column({ name: 'avatar_id', nullable: true })
+  @Field(() => String)
+  avatarId: number;
+
+  @OneToOne(() => Attachment)
+  @JoinColumn({ name: 'avatar_id' })
+  @Field(() => Attachment, { nullable: true })
+  avatar: Attachment;
+
   @Column({ name: 'profile_id' })
   @Field(() => Int)
   profileId: number;

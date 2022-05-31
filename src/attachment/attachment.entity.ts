@@ -21,7 +21,7 @@ export class Attachment extends BaseEntity {
   @Field(() => String)
   path: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 50 })
   @Field(() => String)
   mimetype: string;
 

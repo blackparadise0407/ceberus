@@ -54,6 +54,10 @@ type GetTweetOutput {
   tweets: [Tweet!]!
 }
 
+input GetUserTweetInput {
+  userId: String!
+}
+
 input LoginInput {
   password: String!
   username: String!
@@ -71,6 +75,7 @@ type Mutation {
   deleteFile(attachmentId: String!): Boolean!
   login(loginInput: LoginInput!): LoginOutput!
   register(registerInput: RegisterInput!): String!
+  updateCurrentUserAvatar(avatarId: String!): User!
   updateCurrentUserProfile(updateCurrentUserProfileInput: UpdateCurrentUserProfileInput!): User!
   uploadFile(fileUploadInput: FileUploadInput!): Attachment!
 }
@@ -94,6 +99,7 @@ type Query {
   getTopTweetedTagCount: [CountTweetedTagOutput!]!
   getTweet(getTweetInput: GetTweetInput!): GetTweetOutput!
   getUser(username: String!): User!
+  getUserTweet(getUserTweetInput: GetUserTweetInput!): GetTweetOutput!
   tags: [Tag!]!
   user: [User!]!
 }
@@ -130,7 +136,7 @@ type Tweet {
   text: String!
   updatedAt: DateTime!
   user: User!
-  user_id: String!
+  userId: String!
 }
 
 input UpdateCurrentUserProfileInput {
@@ -144,6 +150,8 @@ scalar Upload
 
 type User {
   attachments: [Attachment!]!
+  avatar: Attachment
+  avatarId: String!
   email: String!
   enabled: Boolean!
   id: String!

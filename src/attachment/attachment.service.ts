@@ -21,6 +21,9 @@ export class AttachmentService extends BaseService<
   }
 
   public getFileExt(filename: string) {
+    if (filename.split('.').length === 1) {
+      return 'jpeg';
+    }
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length);
   }
 }

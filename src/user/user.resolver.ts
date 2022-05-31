@@ -1,7 +1,6 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { plainToClass } from 'class-transformer';
-import { forEach, isEmpty } from 'lodash';
 
 import { AttachmentService } from '@/attachment/attachment.service';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
@@ -86,6 +85,26 @@ export class UserResolver {
     );
     currentUser.profile = updateProfile;
 
+    return currentUser;
+  }
+
+  @Mutation(() => User)
+  public async updateCurrentUserAvatar(
+    @UserD('sub') sub: string,
+    @Args('avatarId') avatarId: string,
+  ) {
+    const avatar = await this.attachmentService.findOne(avatarId);
+    if (!avatar) {
+      throw new NotFoundException('Attachment not found');
+    }
+    const currentUser = await this.userService.findOne(undefined, {
+      where: { id: sub },
+    });
+    if (!currentUser) {
+      throw new NotFoundException('User not found');
+    }
+    currentUser.avatar = avatar;
+    await currentUser.save();
     return currentUser;
   }
 }
