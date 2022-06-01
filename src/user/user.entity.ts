@@ -50,7 +50,7 @@ export class User extends BaseEntity {
   tweets: Tweet[];
 
   @Column({ name: 'avatar_id', nullable: true })
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   avatarId: number;
 
   @OneToOne(() => Attachment)

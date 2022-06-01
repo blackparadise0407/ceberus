@@ -151,7 +151,7 @@ scalar Upload
 type User {
   attachments: [Attachment!]!
   avatar: Attachment
-  avatarId: String!
+  avatarId: String
   email: String!
   enabled: Boolean!
   id: String!

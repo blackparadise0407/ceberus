@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { isEmpty } from 'lodash';
 
 import { AppModule } from './app.module';
+import { initApp } from './init';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const graphqlUploadExpress = require('graphql-upload/graphqlUploadExpress.js');
@@ -11,6 +12,7 @@ const graphqlUploadExpress = require('graphql-upload/graphqlUploadExpress.js');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('App');
+  initApp();
 
   if (!AppModule.isDev) {
     app.use(
