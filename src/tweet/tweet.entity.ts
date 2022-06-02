@@ -31,6 +31,10 @@ export class Tweet extends BaseEntity {
   @Field(() => String)
   text: string;
 
+  @Column({ default: false })
+  @Field(() => Boolean)
+  private: boolean;
+
   @Field(() => String)
   @Column({ name: 'user_id' })
   userId: string;

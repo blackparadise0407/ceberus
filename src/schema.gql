@@ -131,6 +131,7 @@ type Tweet {
   id: Int!
   photo: Attachment
   photoId: String
+  private: Boolean!
   retweets: [ReTweet!]!
   tags: [Tag!]!
   text: String!
