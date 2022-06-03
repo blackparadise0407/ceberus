@@ -9,17 +9,22 @@ import { Tweet } from './tweet.entity';
 @EntityRepository(Tweet)
 export class TweetRepository extends Repository<Tweet> {
   public async findWithPagination(input: GetTweetInput) {
-    const queryBuilder = this.createQueryBuilder('tweet')
+    const { userId, ...q } = input;
+    let queryBuilder = this.createQueryBuilder('tweet')
       .leftJoinAndSelect('tweet.photo', 'attachment')
       .leftJoinAndSelect('tweet.tags', 'tag')
       .innerJoinAndSelect('tweet.user', 'user');
+
+    if (userId) {
+      queryBuilder = queryBuilder.where('tweet.user_id = :userId', { userId });
+    }
 
     const paginator = buildPaginator({
       entity: Tweet,
       paginationKeys: ['createdAt'],
       query: {
         order: 'DESC',
-        ...input,
+        ...q,
       },
     });
     return await paginator.paginate(queryBuilder);
@@ -37,20 +42,24 @@ export class TweetRepository extends Repository<Tweet> {
       .execute();
   }
 
-  // TODO: Implement later
-  // public async findByUser(input: GetUserTweetInput) {
-  //   const { userId } = input;
-  //   const qb = this.createQueryBuilder('tweet').where('userId == :userId', {
-  //     userId,
-  //   });
+  public async findByUser(input: GetUserTweetInput) {
+    const { userId, ...rest } = input;
+    const qb = this.createQueryBuilder('tweet')
+      .where('userId = :userId', {
+        userId,
+      })
+      .leftJoinAndSelect('tweet.photo', 'attachment')
+      .leftJoinAndSelect('tweet.tags', 'tag')
+      .innerJoinAndSelect('tweet.user', 'user');
 
-  //   const paginator = buildPaginator({
-  //     entity: Tweet,
-  //     paginationKeys: ['createdAt'],
-  //     query: {
-  //       order: 'DESC',
-
-  //     }
-  //   })
-  // }
+    const paginator = buildPaginator({
+      entity: Tweet,
+      paginationKeys: ['createdAt'],
+      query: {
+        order: 'DESC',
+        ...rest,
+      },
+    });
+    return await paginator.paginate(qb);
+  }
 }

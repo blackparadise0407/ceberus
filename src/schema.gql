@@ -47,6 +47,7 @@ input GetTweetInput {
   afterCursor: String
   beforeCursor: String
   limit: Int!
+  userId: String
 }
 
 type GetTweetOutput {
@@ -55,6 +56,9 @@ type GetTweetOutput {
 }
 
 input GetUserTweetInput {
+  afterCursor: String
+  beforeCursor: String
+  limit: Int!
   userId: String!
 }
 

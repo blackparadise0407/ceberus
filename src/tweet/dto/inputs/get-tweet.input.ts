@@ -10,4 +10,7 @@ export class GetTweetInput implements BaseQuery {
 
   @Field(() => Int)
   limit: number;
+
+  @Field(() => String, { nullable: true })
+  userId: string;
 }

@@ -38,7 +38,12 @@ export class TweetResolver {
   @Query(() => GetTweetOutput)
   public async getUserTweet(
     @Args('getUserTweetInput') getUserTweetInput: GetUserTweetInput,
-  ) {}
+  ) {
+    const { data, cursor } = await this.tweetService.repo.findByUser(
+      getUserTweetInput,
+    );
+    return { tweets: data, cursor };
+  }
 
   @Mutation(() => Tweet)
   public async createTweet(
