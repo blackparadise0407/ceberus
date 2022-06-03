@@ -55,13 +55,6 @@ type GetTweetOutput {
   tweets: [Tweet!]!
 }
 
-input GetUserTweetInput {
-  afterCursor: String
-  beforeCursor: String
-  limit: Int!
-  userId: String!
-}
-
 input LoginInput {
   password: String!
   username: String!
@@ -103,7 +96,6 @@ type Query {
   getTopTweetedTagCount: [CountTweetedTagOutput!]!
   getTweet(getTweetInput: GetTweetInput!): GetTweetOutput!
   getUser(username: String!): User!
-  getUserTweet(getUserTweetInput: GetUserTweetInput!): GetTweetOutput!
   tags: [Tag!]!
   user: [User!]!
 }
