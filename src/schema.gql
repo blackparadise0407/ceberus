@@ -23,6 +23,7 @@ input CreateTagInput {
 
 input CreateTweetInput {
   photoId: String
+  private: Boolean
   tags: [String!]!
   text: String!
   userId: String!

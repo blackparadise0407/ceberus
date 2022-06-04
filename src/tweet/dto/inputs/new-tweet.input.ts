@@ -13,4 +13,7 @@ export class CreateTweetInput {
 
   @Field(() => [String])
   tags: string[];
+
+  @Field(() => Boolean, { nullable: true })
+  private: boolean;
 }

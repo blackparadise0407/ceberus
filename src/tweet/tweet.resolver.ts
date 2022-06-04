@@ -38,7 +38,13 @@ export class TweetResolver {
   public async createTweet(
     @Args('createTweetInput') createTweetInput: CreateTweetInput,
   ) {
-    const { userId, text, photoId, tags } = createTweetInput;
+    const {
+      userId,
+      text,
+      photoId,
+      tags,
+      private: isPrivate,
+    } = createTweetInput;
     const foundUser = await this.userService.findOne(userId);
     if (!foundUser) {
       throw new BadRequestException(`User with ID ${userId} not found`);
@@ -67,6 +73,7 @@ export class TweetResolver {
     tweet.user = foundUser;
     tweet.text = text;
     tweet.tags = addedTags;
+    tweet.private = isPrivate;
     return await this.tweetService.save(tweet);
   }
 
