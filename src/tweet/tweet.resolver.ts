@@ -7,8 +7,8 @@ import { Tag } from '@/tag/tag.entity';
 import { TagService } from '@/tag/tag.service';
 import { UserService } from '@/user/user.service';
 
-import { GetTweetInput } from './dto/inputs/get-tweet.input';
-import { CreateTweetInput } from './dto/inputs/new-tweet.input';
+import { CreateTweetInput } from './dto/inputs/create-tweet.input';
+import { TweetsInput } from './dto/inputs/tweets.input';
 import { CountTweetedTagOutput } from './dto/outputs/count-tweeted-tag.output';
 import { GetTweetOutput } from './dto/outputs/get-tweet.output';
 import { Tweet } from './tweet.entity';
@@ -25,11 +25,11 @@ export class TweetResolver {
   ) {}
 
   @Query(() => GetTweetOutput)
-  public async getTweet(
-    @Args('getTweetInput') getTweetInput: GetTweetInput,
+  public async tweets(
+    @Args('tweetsInput') tweetsInput: TweetsInput,
   ): Promise<GetTweetOutput> {
     const { data, cursor } = await this.tweetService.repo.findWithPagination(
-      getTweetInput,
+      tweetsInput,
     );
     return { tweets: data, cursor };
   }
@@ -78,7 +78,7 @@ export class TweetResolver {
   }
 
   @Query(() => [CountTweetedTagOutput])
-  public async getTopTweetedTagCount() {
+  public async topTweetedTagCount() {
     return await this.tweetService.repo.countTopTweetedTags();
   }
 }

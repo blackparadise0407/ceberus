@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class GetTweetInput implements BaseQuery {
+export class TweetsInput implements BaseQuery {
   @Field({ nullable: true })
   afterCursor: string | null;
 

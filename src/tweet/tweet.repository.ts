@@ -1,13 +1,13 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { buildPaginator } from 'typeorm-cursor-pagination';
 
-import { GetTweetInput } from './dto/inputs/get-tweet.input';
+import { TweetsInput } from './dto/inputs/tweets.input';
 import { CountTweetedTagOutput } from './dto/outputs/count-tweeted-tag.output';
 import { Tweet } from './tweet.entity';
 
 @EntityRepository(Tweet)
 export class TweetRepository extends Repository<Tweet> {
-  public async findWithPagination(input: GetTweetInput) {
+  public async findWithPagination(input: TweetsInput) {
     const { userId, ...q } = input;
     let queryBuilder = this.createQueryBuilder('tweet')
       .leftJoinAndSelect('tweet.photo', 'attachment')

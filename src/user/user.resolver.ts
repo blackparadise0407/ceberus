@@ -1,14 +1,19 @@
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { plainToClass } from 'class-transformer';
+import { isUUID } from 'class-validator';
 
 import { AttachmentService } from '@/attachment/attachment.service';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
 import { User as UserD } from '@/common/decorators/user.decorator';
 
-import { NewUserInput } from './dto/new-user.input';
 import { UpdateCurrentUserProfileInput } from './dto/update-current-user-profile.input';
 import { ProfileService } from './profile/profile.service';
+import { UserFollower } from './user-follower/user-follower.entity';
+import { UserFollowerService } from './user-follower/user-follower.service';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -19,19 +24,29 @@ export class UserResolver {
     private readonly userService: UserService,
     private readonly profileService: ProfileService,
     private readonly attachmentService: AttachmentService,
+    private readonly userFollowerService: UserFollowerService,
   ) {}
 
-  @Query(() => [User])
-  public async user(): Promise<User[]> {
-    return this.userService.findAll();
+  @Query(() => [UserFollower])
+  public async followers(
+    @Args('userId')
+    userId: string,
+  ): Promise<UserFollower[]> {
+    if (!isUUID(userId)) {
+      throw new BadRequestException('Invalid user ID');
+    }
+    return await this.userFollowerService.repo.findFollowersByUserId(userId);
   }
 
-  @Mutation(() => User)
-  public createUser(
-    @Args('newUserInput') newUserInput: NewUserInput,
-  ): Promise<User> {
-    const createdUser = plainToClass(User, newUserInput);
-    return this.userService.create(createdUser);
+  @Query(() => [UserFollower])
+  public async followings(
+    @Args('userId')
+    userId: string,
+  ): Promise<UserFollower[]> {
+    if (!isUUID(userId)) {
+      throw new BadRequestException('Invalid user ID');
+    }
+    return await this.userFollowerService.repo.findFollowingByUserId(userId);
   }
 
   @Query(() => User)
@@ -46,7 +61,7 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  public async getUser(@Args('username') username: string): Promise<User> {
+  public async user(@Args('username') username: string): Promise<User> {
     const user = await this.userService.findOne(undefined, {
       where: { username },
       relations: ['profile'],
@@ -57,6 +72,25 @@ export class UserResolver {
       );
     }
     return user;
+  }
+
+  @Mutation(() => String)
+  public async follow(
+    @UserD('sub') sub: string,
+    @Args('followingId') followingId: string,
+  ) {
+    if (!isUUID(followingId)) {
+      throw new BadRequestException('Invalid user ID');
+    }
+    const foundUser = await this.userService.findById(followingId);
+    if (!foundUser) {
+      throw new NotFoundException('Following user does not exist');
+    }
+    const userFollower = new UserFollower();
+    userFollower.followerId = sub;
+    userFollower.user = foundUser;
+    await userFollower.save();
+    return 'Follow user successfully';
   }
 
   @Mutation(() => User)

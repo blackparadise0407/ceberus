@@ -15,6 +15,7 @@ import { Attachment } from '@/attachment/attachment.entity';
 import { Tweet } from '@/tweet/tweet.entity';
 
 import { Profile } from './profile/profile.entity';
+import { UserFollower } from './user-follower/user-follower.entity';
 
 @ObjectType()
 @Entity('user')
@@ -44,6 +45,14 @@ export class User extends BaseEntity {
   @Column({ default: true })
   @Field(() => Boolean)
   enabled: boolean;
+
+  @Column({ default: 0 })
+  @Field(() => Int)
+  followerCount: number;
+
+  @Column({ default: 0 })
+  @Field(() => Int)
+  followingCount: number;
 
   @OneToMany(() => Tweet, (tweet) => tweet.id)
   @Field(() => [Tweet])

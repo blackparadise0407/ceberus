@@ -44,13 +44,6 @@ input FileUploadInput {
   userId: String!
 }
 
-input GetTweetInput {
-  afterCursor: String
-  beforeCursor: String
-  limit: Int!
-  userId: String
-}
-
 type GetTweetOutput {
   cursor: Cursor!
   tweets: [Tweet!]!
@@ -69,19 +62,13 @@ type LoginOutput {
 type Mutation {
   createTag(createTagInput: CreateTagInput!): Tag!
   createTweet(createTweetInput: CreateTweetInput!): Tweet!
-  createUser(newUserInput: NewUserInput!): User!
   deleteFile(attachmentId: String!): Boolean!
+  follow(followingId: String!): String!
   login(loginInput: LoginInput!): LoginOutput!
   register(registerInput: RegisterInput!): String!
   updateCurrentUserAvatar(avatarId: String!): User!
   updateCurrentUserProfile(updateCurrentUserProfileInput: UpdateCurrentUserProfileInput!): User!
   uploadFile(fileUploadInput: FileUploadInput!): Attachment!
-}
-
-input NewUserInput {
-  email: String!
-  password: String!
-  username: String!
 }
 
 type Profile {
@@ -94,11 +81,12 @@ type Profile {
 
 type Query {
   currentUser: User!
-  getTopTweetedTagCount: [CountTweetedTagOutput!]!
-  getTweet(getTweetInput: GetTweetInput!): GetTweetOutput!
-  getUser(username: String!): User!
+  followers(userId: String!): [UserFollower!]!
+  followings(userId: String!): [UserFollower!]!
   tags: [Tag!]!
-  user: [User!]!
+  topTweetedTagCount: [CountTweetedTagOutput!]!
+  tweets(tweetsInput: TweetsInput!): GetTweetOutput!
+  user(username: String!): User!
 }
 
 type ReTweet {
@@ -137,6 +125,13 @@ type Tweet {
   userId: String!
 }
 
+input TweetsInput {
+  afterCursor: String
+  beforeCursor: String
+  limit: Int!
+  userId: String
+}
+
 input UpdateCurrentUserProfileInput {
   coverPhotoId: String
   description: String
@@ -152,10 +147,20 @@ type User {
   avatarId: String
   email: String!
   enabled: Boolean!
+  followerCount: Int!
+  followingCount: Int!
   id: String!
   profile: Profile!
   profileId: Int!
   tweets: [Tweet!]!
   username: String!
   verified: Boolean!
+}
+
+type UserFollower {
+  follower: User!
+  followerId: String!
+  id: Int!
+  user: User!
+  userId: String!
 }
