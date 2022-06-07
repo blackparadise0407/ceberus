@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { InjectConnection } from '@nestjs/typeorm';
-import { isUUID } from 'class-validator';
 import { Connection } from 'typeorm';
 
 import { AttachmentService } from '@/attachment/attachment.service';
