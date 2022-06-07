@@ -4,7 +4,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { InjectConnection } from '@nestjs/typeorm';
 import { isUUID } from 'class-validator';
+import { Connection } from 'typeorm';
 
 import { AttachmentService } from '@/attachment/attachment.service';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
@@ -25,6 +27,7 @@ export class UserResolver {
     private readonly profileService: ProfileService,
     private readonly attachmentService: AttachmentService,
     private readonly userFollowerService: UserFollowerService,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
   @Query(() => [UserFollower])
@@ -32,9 +35,6 @@ export class UserResolver {
     @Args('userId')
     userId: string,
   ): Promise<UserFollower[]> {
-    if (!isUUID(userId)) {
-      throw new BadRequestException('Invalid user ID');
-    }
     return await this.userFollowerService.repo.findFollowersByUserId(userId);
   }
 
@@ -43,9 +43,6 @@ export class UserResolver {
     @Args('userId')
     userId: string,
   ): Promise<UserFollower[]> {
-    if (!isUUID(userId)) {
-      throw new BadRequestException('Invalid user ID');
-    }
     return await this.userFollowerService.repo.findFollowingByUserId(userId);
   }
 
@@ -79,18 +76,71 @@ export class UserResolver {
     @UserD('sub') sub: string,
     @Args('followingId') followingId: string,
   ) {
-    if (!isUUID(followingId)) {
-      throw new BadRequestException('Invalid user ID');
+    const followedUser = await this.userService.findById(followingId);
+    if (!followedUser) {
+      throw new NotFoundException('Followed user does not exist');
     }
-    const foundUser = await this.userService.findById(followingId);
-    if (!foundUser) {
+    const existingRelationship = await this.userFollowerService.findOne(
+      undefined,
+      {
+        where: {
+          followerId: sub,
+          user: followedUser,
+        },
+      },
+    );
+    if (existingRelationship) {
+      throw new BadRequestException(
+        `User ${sub} already follow user ${followedUser.id}`,
+      );
+    }
+    const followingUser = await this.userService.findById(sub);
+    if (!followingUser) {
       throw new NotFoundException('Following user does not exist');
     }
+
     const userFollower = new UserFollower();
     userFollower.followerId = sub;
-    userFollower.user = foundUser;
-    await userFollower.save();
+    userFollower.user = followedUser;
+    followedUser.followerCount += 1;
+    followingUser.followingCount += 1;
+    // Transaction
+    this.connection.transaction(async (manager) => {
+      await manager.save(userFollower);
+      await manager.save(followedUser);
+      await manager.save(followingUser);
+    });
     return 'Follow user successfully';
+  }
+
+  @Mutation(() => String)
+  public async unfollow(
+    @UserD('sub') sub: string,
+    @Args('unfollowingId') unfollowingId: string,
+  ) {
+    const existingRelationship = await this.userFollowerService.findOne(
+      undefined,
+      {
+        where: {
+          followerId: sub,
+          userId: unfollowingId,
+        },
+        relations: ['follower', 'user'],
+      },
+    );
+    if (!existingRelationship) {
+      throw new BadRequestException('User already unfollowed');
+    }
+    const { user, follower } = existingRelationship;
+    follower.followingCount -= 1;
+    user.followerCount -= 1;
+    // Transaction
+    this.connection.transaction(async (manager) => {
+      await manager.remove(existingRelationship);
+      await manager.save(follower);
+      await manager.save(user);
+    });
+    return 'Unfollow user successfully';
   }
 
   @Mutation(() => User)

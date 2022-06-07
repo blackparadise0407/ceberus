@@ -66,6 +66,7 @@ type Mutation {
   follow(followingId: String!): String!
   login(loginInput: LoginInput!): LoginOutput!
   register(registerInput: RegisterInput!): String!
+  unfollow(unfollowingId: String!): String!
   updateCurrentUserAvatar(avatarId: String!): User!
   updateCurrentUserProfile(updateCurrentUserProfileInput: UpdateCurrentUserProfileInput!): User!
   uploadFile(fileUploadInput: FileUploadInput!): Attachment!
