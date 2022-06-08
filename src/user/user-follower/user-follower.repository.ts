@@ -8,6 +8,7 @@ export class UserFollowerRepository extends Repository<UserFollower> {
     return this.createQueryBuilder('userFollower')
       .where('userFollower.user_id = :userId', { userId })
       .leftJoinAndMapOne('userFollower.user', 'userFollower.follower', 'user')
+      .leftJoinAndSelect('user.profile', 'profile')
       .getMany();
   }
 
@@ -15,6 +16,7 @@ export class UserFollowerRepository extends Repository<UserFollower> {
     return this.createQueryBuilder('userFollower')
       .where('userFollower.follower_id = :userId', { userId })
       .leftJoinAndSelect('userFollower.user', 'user')
+      .leftJoinAndSelect('user.profile', 'profile')
       .getMany();
   }
 }
