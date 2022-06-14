@@ -104,7 +104,7 @@ export class UserResolver {
     followedUser.followerCount += 1;
     followingUser.followingCount += 1;
     // Transaction
-    this.connection.transaction(async (manager) => {
+    await this.connection.transaction(async (manager) => {
       await manager.save(userFollower);
       await manager.save(followedUser);
       await manager.save(followingUser);
@@ -134,7 +134,7 @@ export class UserResolver {
     follower.followingCount -= 1;
     user.followerCount -= 1;
     // Transaction
-    this.connection.transaction(async (manager) => {
+    await this.connection.transaction(async (manager) => {
       await manager.remove(existingRelationship);
       await manager.save(follower);
       await manager.save(user);
