@@ -190,4 +190,12 @@ export class UserResolver {
     await currentUser.save();
     return currentUser;
   }
+
+  @Query(() => [User])
+  public async topFollowedUsers() {
+    const top = await this.userFollowerService.repo.findTopFollowedUsers();
+    console.log(top);
+    return [];
+    // const topFollowedUsers = await this.userFollowerService.
+  }
 }

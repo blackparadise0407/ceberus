@@ -34,4 +34,6 @@ export class UserFollower extends BaseEntity {
   @JoinColumn({ name: 'follower_id' })
   @Field(() => User)
   follower: User;
+
+  count: number;
 }
