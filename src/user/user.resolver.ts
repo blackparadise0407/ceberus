@@ -11,6 +11,7 @@ import { AttachmentService } from '@/attachment/attachment.service';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
 import { User as UserD } from '@/common/decorators/user.decorator';
 
+import { TopFollowedUser } from './dto/top-followed-user.output';
 import { UpdateCurrentUserProfileInput } from './dto/update-current-user-profile.input';
 import { ProfileService } from './profile/profile.service';
 import { UserFollower } from './user-follower/user-follower.entity';
@@ -191,11 +192,10 @@ export class UserResolver {
     return currentUser;
   }
 
-  @Query(() => [User])
+  @Query(() => [TopFollowedUser])
   public async topFollowedUsers() {
-    const top = await this.userFollowerService.repo.findTopFollowedUsers();
-    console.log(top);
-    return [];
-    // const topFollowedUsers = await this.userFollowerService.
+    const res = await this.userFollowerService.repo.findTopFollowedUsers();
+    console.log(res);
+    return res;
   }
 }

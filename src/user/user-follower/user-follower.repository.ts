@@ -1,7 +1,8 @@
-import { camelCase } from 'lodash';
 import { EntityRepository, Repository } from 'typeorm';
 
-import { User } from '../user.entity';
+import { mapRawQueryToEntities } from '@/helpers/typeorm';
+
+import { TopFollowedUser } from '../dto/top-followed-user.output';
 import { UserFollower } from './user-follower.entity';
 
 @EntityRepository(UserFollower)
@@ -29,22 +30,11 @@ export class UserFollowerRepository extends Repository<UserFollower> {
       .leftJoinAndSelect('userFollower.user', 'user')
       .leftJoinAndSelect('user.profile', 'profile')
       .groupBy('user.id')
+      .addGroupBy('profile.id')
       .orderBy('"userFollower"."count"', 'DESC')
-      .limit(10)
+      .limit(5)
       .getRawMany();
-    return result.map<Partial<UserFollower>>(({ count, ...user }) => {
-      const _user = {} as User;
-      Object.keys(user).map((key) => {
-        const [_, ...rest] = key.split('_');
-        _user[camelCase(rest.join('_'))] = user[key];
-      });
-      return {
-        count: +count,
-        user: _user as User,
-      };
-    });
-    // return this.query(
-    //   'select u.*, count(uf.user_id) from user_follower uf left join "user" u on uf.user_id=u.id group by u.id order by uf.count DESC limit 10',
-    // );
+    console.log(result);
+    return mapRawQueryToEntities<TopFollowedUser>(result, ['count']);
   }
 }
