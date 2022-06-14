@@ -37,7 +37,7 @@ export class TweetRepository extends Repository<Tweet> {
       .select('tag.id, tag.name, count(tag.id)')
       .where('tag.id IS NOT NULL')
       .orderBy('count(tag.id)', 'DESC')
-      .limit(6)
+      .limit(5)
       .execute();
   }
 }

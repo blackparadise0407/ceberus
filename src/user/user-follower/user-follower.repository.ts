@@ -32,7 +32,7 @@ export class UserFollowerRepository extends Repository<UserFollower> {
       .groupBy('user.id')
       .addGroupBy('profile.id')
       .orderBy('"userFollower"."count"', 'DESC')
-      .limit(5)
+      .limit(2)
       .getRawMany();
     console.log(result);
     return mapRawQueryToEntities<TopFollowedUser>(result, ['count']);
