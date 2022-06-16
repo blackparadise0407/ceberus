@@ -85,7 +85,7 @@ type Query {
   followers(userId: String!): [UserFollower!]!
   followings(userId: String!): [UserFollower!]!
   tags: [Tag!]!
-  topFollowedUsers: [TopFollowedUser!]!
+  topFollowedUsers(userId: String!): [TopFollowedUser!]!
   topTweetedTagCount: [CountTweetedTagOutput!]!
   tweets(tweetsInput: TweetsInput!): GetTweetOutput!
   user(username: String!): User!

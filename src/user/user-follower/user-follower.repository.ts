@@ -23,9 +23,10 @@ export class UserFollowerRepository extends Repository<UserFollower> {
       .getMany();
   }
 
-  public async findTopFollowedUsers() {
+  public async findTopFollowedUsers(userId: string) {
     // RAW QUERY select u.*, count(uf.user_id) from user_follower uf left join "user" u on uf.user_id=u.id group by u.id order by uf.count DESC limit 10;
     const result = await this.createQueryBuilder('userFollower')
+      .where('userFollower.user_id != :userId', { userId })
       .select('COUNT(userFollower.user_id)', 'count')
       .leftJoinAndSelect('userFollower.user', 'user')
       .leftJoinAndSelect('user.profile', 'profile')

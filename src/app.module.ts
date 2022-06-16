@@ -34,7 +34,6 @@ import { UserModule } from './user/user.module';
         entities: [join(__dirname, '**/*.entity{.ts,.js}')],
         synchronize: true,
         useUTC: true,
-        logging: true,
       }),
       inject: [ConfigService],
     }),

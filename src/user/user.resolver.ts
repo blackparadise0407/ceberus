@@ -76,6 +76,9 @@ export class UserResolver {
     @UserD('sub') sub: string,
     @Args('followingId') followingId: string,
   ) {
+    if (sub === followingId) {
+      throw new BadRequestException('You cannot follow yourself');
+    }
     const followedUser = await this.userService.findById(followingId);
     if (!followedUser) {
       throw new NotFoundException('Followed user does not exist');
@@ -193,9 +196,7 @@ export class UserResolver {
   }
 
   @Query(() => [TopFollowedUser])
-  public async topFollowedUsers() {
-    const res = await this.userFollowerService.repo.findTopFollowedUsers();
-    console.log(res);
-    return res;
+  public async topFollowedUsers(@Args('userId') userId: string) {
+    return await this.userFollowerService.repo.findTopFollowedUsers(userId);
   }
 }
